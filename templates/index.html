@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eu-Hack | Recruitment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to the Eu-Hack Challenge</h1>
+        <p>Prove your worth by solving these coding challenges. Only the worthy shall proceed...</p>
+
+        <!-- Countdown Timer -->
+        <div id="countdown">
+            <h2>Time Remaining:</h2>
+            <div id="timer"></div>
+        </div>
+
+        <form action="/submit" method="post">
+            {% for question in questions %}
+                <div class="question">
+                    <h2>{{ question.question }}</h2>
+                    <textarea name="code_{{ question.id }}" rows="10" cols="50" placeholder="Write your code here">{{ progress[question.id] }}</textarea>
+                </div>
+            {% endfor %}
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // Countdown Timer
+        const endTime = new Date("{{ end_time }}").getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = endTime - now;
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById("timer").innerHTML =
+                days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+            if (distance < 0) {
+                clearInterval(interval);
+                document.getElementById("timer").innerHTML = "EXPIRED";
+            }
+        }
+
+        const interval = setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
